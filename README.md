@@ -366,12 +366,20 @@ fetch('/api/products')   // а не fetch('http://localhost:8080/api/products')
 Сервер розробки (Vite) налаштовано так, що запити за певними шляхами він не обробляє сам, а **перенаправляє (проксіює) на сервер застосунку**. Налаштування у файлі `vite.config.js`:
 
 ```js
-server: {
-  proxy: {
-    '/api':    'http://localhost:8080',
-    '/images': 'http://localhost:8080',
+export default {
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/images': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+    },
   },
-}
+};
 ```
 
 Це означає: усе, що надходить на `/api/...` та `/images/...`, сервер розробки передає на `http://localhost:8080`, отримує відповідь і повертає її браузеру. Перенаправлення відбувається **на боці сервера розробки**, а не в браузері, тому в адресі запиту воно не відображається.
